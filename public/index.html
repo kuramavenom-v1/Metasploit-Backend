@@ -519,6 +519,105 @@
     </div>
 
     <script>
+    var audio = document.getElementById("bgMusic");
+
+    function goToLogin() {
+        audio.play().catch(function(err) {
+            console.log("Audio play error: ", err);
+        });
+
+        var welcomeScreen = document.getElementById("welcomeScreen");
+        welcomeScreen.style.opacity = "0";
+        
+        setTimeout(function() {
+            welcomeScreen.style.display = "none";
+            var loginScreen = document.getElementById("loginScreen");
+            loginScreen.style.display = "flex";
+        }, 600);
+    }
+
+    function sendEmailCode() {
+        const emailInput = document.getElementById('username').value;
+        if(!emailInput) {
+            alert("الرجاء إدخال البريد الإلكتروني أولاً!");
+            return;
+        }
+
+        alert("تم إرسال كود التحقق بنجاح!");
+
+        const emailGroup = document.getElementById('email-group');
+        emailGroup.style.opacity = "0";
+        emailGroup.style.transform = "translateY(10px)";
+        
+        setTimeout(function() {
+            emailGroup.style.display = "none";
+            const otpGroup = document.getElementById('otp-group');
+            otpGroup.style.display = "block";
+            setTimeout(function() {
+                otpGroup.style.opacity = "1";
+                otpGroup.style.transform = "translateY(0)";
+            }, 50);
+        }, 400);
+    }
+
+    function verifyEmailCode() {
+        const otpCode = document.getElementById('otp-code').value;
+
+        if(!otpCode) {
+            alert("الرجاء إدخال كود التحقق!");
+            return;
+        }
+
+        const otpGroup = document.getElementById('otp-group');
+        otpGroup.style.opacity = "0";
+        otpGroup.style.transform = "translateY(10px)";
+
+        setTimeout(function() {
+            otpGroup.style.display = "none";
+            
+            const verifiedBadge = document.getElementById('verified-badge');
+            verifiedBadge.style.display = "block";
+
+            const passwordGroup = document.getElementById('password-group');
+            passwordGroup.style.display = "block";
+            setTimeout(function() {
+                passwordGroup.style.opacity = "1";
+                passwordGroup.style.transform = "translateY(0)";
+            }, 50);
+        }, 400);
+    }
+
+    function handleLogin(event) {
+        if(event) event.preventDefault(); 
+        
+        const passwordInput = document.getElementById('password').value;
+        const msgDiv = document.getElementById('msg');
+        
+        const correctPassword = "kuroma2026";
+
+        if (passwordInput === correctPassword) {
+            msgDiv.className = "message success-msg";
+            msgDiv.style.display = "block";
+            msgDiv.innerText = "تم التحقق من الهوية بنجاح! جاري تحميل الدليل...";
+
+            setTimeout(function() {
+                var loginScreen = document.getElementById("loginScreen");
+                loginScreen.style.opacity = "0";
+                
+                setTimeout(function() {
+                    loginScreen.style.display = "none";
+                    var mainContent = document.getElementById("mainContent");
+                    mainContent.style.display = "flex";
+                    window.scrollTo(0, 0);
+                }, 600);
+            }, 1000);
+
+        } else {
+            msgDiv.className = "message error-msg";
+            msgDiv.style.display = "block";
+            msgDiv.innerText = "فشل التحقق: كلمة المرور غير صحيحة.";
+        }
+    }
         var audio = document.getElementById("bgMusic");
 
         function goToLogin() {
