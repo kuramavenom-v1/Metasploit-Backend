@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Metasploit Framework Guide</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght=400;600;700&display=swap');
+
+        :root {
+            --bg-color: #05050b;
+            --box-bg: rgba(13, 13, 25, 0.9);
+            --main-blue: #00d2ff;
+            --dark-blue: #006699;
+            --text-color: #e0e6ed;
+            --accent-glow: rgba(0, 210, 255, 0.35);
+            --cmd-color: #ff5555;
+            --cmd-bg: #16162a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Cairo', sans-serif;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .overlay-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #05050b;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.6s ease, visibility 0.6s;
+        }
+
+        .welcome-btn {
+            background: transparent;
+            color: #fff;
+            border: 2px solid var(--main-blue);
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            box-shadow: 0 0 15px var(--accent-glow);
+            transition: all 0.3s ease;
+        }
+
+        .welcome-btn:hover {
+            background: var(--main-blue);
+            box-shadow: 0 0 25px var(--main-blue);
+            color: #000;
+        }
+
+        .login-box {
+            background: var(--box-bg);
+            border: 2px solid var(--main-blue);
+            border-radius: 14px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 25px var(--accent-glow);
+            text-align: center;
+            animation: fadeInGlow 0.8s ease-out;
+        }
+
+        .login-box h2 {
+            color: #fff;
+            border: none;
+            margin: 0 0 20px 0;
+            padding: 0;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px var(--main-blue);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--main-blue);
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            background: var(--cmd-bg);
+            border: 1px solid rgba(0, 210, 255, 0.3);
+            border-radius: 6px;
+            color: #fff;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--main-blue);
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+        }
+
+        .login-btn {
+            width: 100%;
+            background: var(--main-blue);
+            color: #000;
+            border: none;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: #fff;
+            box-shadow: 0 0 20px #fff;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            display: none;
+            text-align: center;
+        }
+        .error-msg { color: #ff5555; text-shadow: 0 0 5px rgba(255,85,85,0.3); }
+        .success-msg { color: #00ffcc; text-shadow: 0 0 5px rgba(0,255,204,0.3); }
+
+        .main-content {
+            display: none;
+            width: 100%;
+            max-width: 950px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 10px var(--main-blue), 0 0 20px var(--dark-blue);
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .glow-box {
+            width: 100%;
+            background: var(--box-bg);
+            border: 2px solid var(--main-blue);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 0 25px var(--accent-glow);
+            text-align: right;
+        }
+
+        h1 { 
+            color: #fff; 
+            text-align: center; 
+            font-size: 1.6rem;
+            border-bottom: 2px dashed var(--main-blue); 
+            padding-bottom: 15px; 
+            margin-bottom: 20px;
+        }
+
+        h2 { 
+            color: var(--main-blue); 
+            font-size: 1.3rem;
+            border-right: 4px solid var(--main-blue); 
+            padding-right: 10px; 
+            margin: 35px 0 15px 0; 
+        }
+
+        .cmd-block {
+            background: rgba(0, 210, 255, 0.04);
+            border-left: 3px solid rgba(0, 210, 255, 0.3);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .cmd-title { 
+            color: #fff; 
+            font-family: monospace; 
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        p { 
+            line-height: 1.8; 
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+
+        code { 
+            background: var(--cmd-bg); 
+            padding: 3px 8px; 
+            border-radius: 5px; 
+            color: var(--cmd-color); 
+            font-family: monospace;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 85, 85, 0.15);
+            display: inline-block;
+            direction: ltr;
+        }
+
+        ul { 
+            list-style-type: square; 
+            padding-right: 20px; 
+            margin-top: 8px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: linear-gradient(to left, transparent, var(--main-blue), transparent);
+            margin: 25px 0;
+        }
+
+        @keyframes fadeInGlow {
+            from { opacity: 0; transform: scale(0.9); box-shadow: 0 0 0 transparent; }
+            to { opacity: 1; transform: scale(1); box-shadow: 0 0 25px var(--accent-glow); }
+        }
+
+        @media (min-width: 768px) {
+            body { padding: 30px; }
+            .main-title { font-size: 2.8rem; margin: 30px 0; }
+            .glow-box { padding: 40px; }
+            h1 { font-size: 2.1rem; }
+            h2 { font-size: 1.6rem; }
+            p, li { font-size: 1.05rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay-screen" id="welcomeScreen">
+        <button class="welcome-btn" onclick="goToLogin()">تفعيل النظام ودخول الدليل</button>
+    </div>
+
+    <div class="overlay-screen" id="loginScreen" style="display: none;">
+        <div class="login-box">
+            <h2>قاعدة التحقق من الهوية</h2>
+            <form id="authForm" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label for="username">البريد الإلكتروني / اسم المستخدم</label>
+                    <input type="email" id="username" required placeholder="أدخل البريد الإلكتروني اللحظي...">
+                </div>
+                <div class="input-group">
+                    <label for="password">Password Tool</label>
+                    <input type="password" id="password" required placeholder="أدخل كلمة المرور الخاصة بالموقع...">
+                </div>
+                <button type="submit" class="login-btn">تأكيد الدخول</button>
+                <div id="msg" class="message"></div>
+            </form>
+        </div>
+    </div>
+
+    <audio id="bgMusic" src="m.mp3" loop></audio>
+
+    <div class="main-content" id="mainContent">
+        <div class="main-title">Metasploit Framework 🛡️</div>
+
+        <div class="glow-box">
+            <h1>🛡️ الدليل الشامل لأوامر Metasploit Framework 🛡️</h1>
+            
+            <h2>📁 القسم الأول: الأوامر الأساسية والعامة (Core Commands)</h2>
+            <p>تُستخدم هذه الأوامر لإدارة الجلسة، التنقل، ومعرفة حالة الأداة بشكل عام.</p>
+            <br>
+            
+            <div class="cmd-block">
+                <div class="cmd-title">help أو ?</div>
+                <p><strong>الشرح:</strong> يعرض لك قائمة بجميع الأوامر المتاحة داخل البيئة الحالية مع شرح مختصر لكل أمر.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">version</div>
+                <p><strong>الشرح:</strong> يظهر رقم إصدار أداة Metasploit الحالية والمكونات المثبتة معها.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">status</div>
+                <p><strong>الشرح:</strong> يعرض حالة الإطار الحالي، ويظهر ما إذا كان هناك أي عمليات خلفية تعمل أو جلسات نشطة.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">banner</div>
+                <p><strong>الشرح:</strong> يقوم بتغيير الشعار النصي الترحيبي الخاص بـ Metasploit بشكل عشوائي.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">cd</div>
+                <p><strong>الشرح:</strong> يغير المجلد الحالي الذي تعمل فيه أداة Metasploit على جهازك.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">makerc</div>
+                <p><strong>الشرح:</strong> يقوم بحفظ جميع الأوامر التي قمت بكتابتها خلال جلستك الحالية في ملف نصي بامتداد <code>.rc</code>.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">resource</div>
+                <p><strong>الشرح:</strong> يقوم بتشغيل ملف الأوامر التلقائية (ملف بامتداد <code>.rc</code>).</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">history</div>
+                <p><strong>الشرح:</strong> يعرض قائمة بجميع الأوامر السابقة التي قمت بكتابتها في الجلسة الحالية.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">exit أو quit</div>
+                <p><strong>الشرح:</strong> إغلاق أداة Metasploit بالكامل والعودة إلى شاشة النظام الأساسية.</p>
+            </div>
+
+            <hr>
+
+            <h2>🔍 القسم الثاني: أوامر اختيار وإدارة الموديلات (Module Commands)</h2>
+            <p>تُستخدم للبحث عن الثغرات، استعراض الإضافات، واختيار بيئة الهجوم المناسبة.</p>
+            <br>
+
+            <div class="cmd-block">
+                <div class="cmd-title">search</div>
+                <p><strong>الشرح:</strong> البحث في قاعدة البيانات الضخمة لـ Metasploit عن ثغرة، أداة فحص، أو حمولة معينة.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">use</div>
+                <p><strong>الشرح:</strong> تفعيل واختيار موديل معين للبدء في ضبط إعداداته.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">back</div>
+                <p><strong>الشرح:</strong> الخروج من الموديل الحالي الذي قمت باختياره، والعودة إلى السطر الرئيسي <code>msf6 &gt;</code>.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">info</div>
+                <p><strong>الشرح:</strong> يعرض لك تفاصيل كاملة ودقيقة عن الموديل المختار حالياً.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">show</div>
+                <p><strong>الشرح:</strong> أمر استعراض عام، تتغير نتائجه حسب الكلمة التي تأتي بعده مثل الأجهزة المتاحة والحمولات المتوافقة.</p>
+            </div>
+
+            <hr>
+
+            <h2>⚙️ القسم الثالث: أوامر ضبط الإعدادات والمتغيرات (Variables Commands)</h2>
+            <p>تُستخدم لتحديد بيانات الهدف (الضحية) وجهاز المهاجم وتجهيز سيناريو الهجوم.</p>
+            <br>
+
+            <div class="cmd-block">
+                <div class="cmd-title">set</div>
+                <p><strong>الشرح:</strong> تحديد قيمة لمتغير معين داخل الموديل الحالي فقط.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">unset</div>
+                <p><strong>الشرح:</strong> إلغاء القيمة التي قمت بتعيينها لمتغير معين وإعادته لحالته الافتراضية.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">setg</div>
+                <p><strong>الشرح:</strong> تعيين قيمة "عامة" (Global) لمتغير معين، بحيث يتم تطبيقه على جميع الموديلات تلقائياً.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">unsetg</div>
+                <p><strong>الشرح:</strong> إلغاء تفعيل المتغير العام الذي قمت بتثبيته عبر أمر <code>setg</code>.</p>
+            </div>
+
+            <hr>
+
+            <h2>🚀 القسم الرابع: أوامر الفحص والتشغيل والاستغلال (Execution Commands)</h2>
+            <p>الخطوة الفعلية لبدء الهجوم وفحص الأهداف الجارية.</p>
+            <br>
+
+            <div class="cmd-block">
+                <div class="cmd-title">check</div>
+                <p><strong>الشرح:</strong> يقوم بفحص الجهاز المستهدف عن بُعد للتأكد مما إذا كان مصاباً بالثغرة فعلياً دون اختراقه.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">exploit أو run</div>
+                <p><strong>الشرح:</strong> الأمر الفعلي لبدء عملية الاختراق وإرسال الاستغلال والحمولة إلى النظام المستهدف.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">exploit -j أو run -j</div>
+                <p><strong>الشرح:</strong> تشغيل الاستغلال في "الخلفية" كـ (Job) لانتظار اتصالات الأجهزة المخترقة.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">jobs</div>
+                <p><strong>الشرح:</strong> يستعرض جميع العمليات والاستغلالات التي تعمل حالياً في الخلفية.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">kill &lt;job_id&gt;</div>
+                <p><strong>الشرح:</strong> إيقاف عملية معينة تعمل في الخلفية باستخدام الرقم الخاص بها (ID).</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">sessions</div>
+                <p><strong>الشرح:</strong> يعرض لك قائمة بجميع الجلسات والأنظمة المتصلة بك حالياً.</p>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-title">sessions -i &lt;session_id&gt;</div>
+                <p><strong>الشرح:</strong> الدخول والتفاعل مع جلسة معينة عبر رقمها للبدء في التحكم بالجهاز المستهدف.</p>
+            </div>
+
+            <hr>
+
+            <h2>🎯 القسم الخامس: أوامر واجهة التحكم المتقدمة (Meterpreter Commands)</h2>
+            <p>عند نجاح الاتصال، تتحول الواجهة إلى <code>meterpreter &gt;</code> للتحكم الكامل بالنظام المستهدف.</p>
+            
+            <h3>📄 1. إدارة الملفات والتنقل (File System Commands)</h3>
+            <ul>
+                <li><code>pwd</code>: لمعرفة المجلد الحالي الذي تقف فيه الآن داخل جهاز الضحية.</li>
+                <li><code>cd &lt;folder&gt;</code>: تغيير المجلد والانتقال إلى مجلد آخر داخل جهاز الضحية.</li>
+                <li><code>ls</code>: استعراض كافة الملفات والمجلدات الموجودة في المسار الحالي لدى الضحية.</li>
+                <li><code>mkdir &lt;name&gt;</code>: إنشاء مجلد جديد داخل جهاز الضحية.</li>
+                <li><code>rm &lt;file&gt;</code>: حذف ملف معين من جهاز الضحية.</li>
+                <li><code>rmdir &lt;folder&gt;</code>: حذف مجلد بالكامل من جهاز الضحية.</li>
+                <li><code>upload &lt;local_file&gt;</code>: رفع ملف من جهاز المهاجم إلى جهاز الضحية.</li>
+                <li><code>download &lt;remote_file&gt;</code>: تحميل وسحب ملف من جهاز الضحية إلى جهازك الشخصي.</li>
+                <li><code>cat &lt;file&gt;</code>: قراءة واستعراض محتوى الملفات النصية مباشرة دون تحميلها.</li>
+                <li><code>edit &lt;file&gt;</code>: فتح ملف نصي داخل جهاز الضحية وتعديل محتواه مباشرة.</li>
+            </ul>
+
+            <h3>💻 2. التحكم في النظام والعمليات (System Commands)</h3>
+            <ul>
+                <li><code>sysinfo</code>: عرض معلومات تفصيلية عن جهاز الضحية (اسم الكمبيوتر، نظام التشغيل، المعمارية واللغة).</li>
+                <li><code>getuid</code>: معرفة اسم المستخدم والصلاحيات التي تمتلكها حالياً على جهاز الضحية.</li>
+                <li><code>getsystem</code>: محاولة رفع الصلاحيات تلقائياً لتصبح المسؤول الأول في حال دخلت بصلاحيات مستخدم محدود.</li>
+                <li><code>ps</code>: استعراض جميع العمليات والبرامج والخدمات التي تعمل حالياً في خلفية نظام الضحية.</li>
+                <li><code>kill &lt;PID&gt;</code>: إجبار برنامج أو عملية معينة تعمل لدى الضحية على الإغلاق.</li>
+                <li><code>shell</code>: يفتح لك سطر الأوامر الافتراضي الخاص بنظام الضحية للتحكم بالأوامر الأصلية.</li>
+                <li><code>shutdown</code>: إيقاف تشغيل جهاز الضحية بالكامل عن بُعد.</li>
+                <li><code>reboot</code>: إعادة تشغيل جهاز الضحية عن بُعد.</li>
+            </ul>
+
+            <h3>👁️ 3. التجسس وجمع المعلومات (Spying Commands)</h3>
+            <ul>
+                <li><code>keyscan_start</code>: البدء في تسجيل كل ما يتم كتابته على لوحة مفاتيح الضحية.</li>
+                <li><code>keyscan_dump</code>: استخراج وعرض الكلمات والنصوص التي قام الضحية بكتابتها منذ تشغيل الأمر السابق.</li>
+                <li><code>keyscan_stop</code>: إيقاف عملية تسجيل لوحة المفاتيح.</li>
+                <li><code>screenshot</code>: التقاط صورة حية لشاشة الضحية وحفظها تلقائياً في جهازك الشخصي.</li>
+                <li><code>webcam_list</code>: استعراض كاميرات الويب المتصلة بجهاز الضحية.</li>
+                <li><code>webcam_snap</code>: التقاط صورة صامتة وسريعة باستخدام كاميرا ويب الضحية وحفظها عندك.</li>
+                <li><code>webcam_stream</code>: فتح بث فيديو حي ومباشر من كاميرا الضحية وعرضه على شاشتك.</li>
+                <li><code>record_mic &lt;seconds&gt;</code>: تسجيل الصوت المحيط بجهاز الضحية عبر الميكروفون الداخلي لعدد معين من الثواني.</li>
+            </ul>
+
+            <h3>🔑 4. استخراج البيانات والشهادات (Credentials Commands)</h3>
+            <ul>
+                <li><code>hashdump</code>: استخراج كافة هاشات كلمات المرور الخاصة بالمستخدمين المخزنة في قاعدة بيانات النظام.</li>
+                <li><code>idletime</code>: معرفة كم من الوقت مر والجهاز خامل للتأكد من عدم وجود الشخص أمام الشاشة.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        var audio = document.getElementById("bgMusic");
+
+        function goToLogin() {
+            audio.play().catch(function(err) {
+                console.log("Audio play error: ", err);
+            });
+
+            var welcomeScreen = document.getElementById("welcomeScreen");
+            welcomeScreen.style.opacity = "0";
+            
+            setTimeout(function() {
+                welcomeScreen.style.display = "none";
+                var loginScreen = document.getElementById("loginScreen");
+                loginScreen.style.display = "flex";
+            }, 600);
+        }
+
+        function handleLogin(event) {
+            event.preventDefault(); 
+            
+            const passwordInput = document.getElementById('password').value;
+            const msgDiv = document.getElementById('msg');
+            
+            const correctPassword = "kuroma2026";
+
+            if (passwordInput === correctPassword) {
+                msgDiv.className = "message success-msg";
+                msgDiv.style.display = "block";
+                msgDiv.innerText = "تم التحقق من الهوية بنجاح! جاري تحميل الدليل...";
+
+                setTimeout(function() {
+                    var loginScreen = document.getElementById("loginScreen");
+                    loginScreen.style.opacity = "0";
+                    
+                    setTimeout(function() {
+                        loginScreen.style.display = "none";
+                        var mainContent = document.getElementById("mainContent");
+                        mainContent.style.display = "flex";
+                        window.scrollTo(0, 0);
+                    }, 600);
+                }, 1000);
+
+            } else {
+                msgDiv.className = "message error-msg";
+                msgDiv.style.display = "block";
+                msgDiv.innerText = "فشل التحقق: كلمة المرور غير صحيحة.";
+            }
+        }
+    </script>
+</body>
+</html>
+
