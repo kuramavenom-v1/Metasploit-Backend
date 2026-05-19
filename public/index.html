@@ -64,5 +64,17 @@
         alert("تم تسجيل الدخول بجوجل بنجاح وحفظ الجلسة!");
     }
 </script>
+<script>
+function nextToPassword() {
+  var emailPart = document.getElementById("part-email") || document.getElementById("step1");
+  var passPart = document.getElementById("part-pass") || document.getElementById("step2");
+  var shieldMsg = document.getElementById("shield-msg") || document.getElementById("shield");
+  if(emailPart) emailPart.style.display = "none";
+  if(shieldMsg) shieldMsg.style.display = "block";
+  setTimeout(function() {
+    if(passPart) passPart.style.display = "block";
+  }, 1000);
+}
+</script>
 </body>
 </html>
