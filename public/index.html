@@ -537,7 +537,7 @@
         }
 
         function sendEmailCode() {
-            const emailInput = document.getElementById('username').value;
+            const emailInput = document.getElementById('username') ? document.getElementById('username').value : '';
             if(!emailInput) {
                 alert("الرجاء إدخال البريد الإلكتروني أولاً!");
                 return;
