@@ -205,6 +205,14 @@
             margin-bottom: 15px;
         }
 
+        .cmd-block {
+            background: rgba(0, 210, 255, 0.04);
+            border-left: 3px solid rgba(0, 210, 255, 0.3);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
         .cmd-title { 
             color: #fff; 
             font-family: monospace; 
@@ -410,7 +418,7 @@
 
             <div class="cmd-block">
                 <div class="cmd-title">setg</div>
-                <p><strong>الشرح:</strong> تعيين قيمة "عامة" (Global) لمتغير معين، بحيث يتم تطبيقه على جميع الموديلات تلقائياً.</p>
+                <p><strong>الشرح:</strong> تعيين قيمة "عامة" (Global) لمتغير معين, بحيث يتم تطبيقه على جميع الموديلات تلقائياً.</p>
             </div>
 
             <div class="cmd-block">
@@ -528,7 +536,6 @@
             }, 600);
         }
 
-        // إرسال الكود وتلاشي خانة الإيميل بنعومة
         function sendEmailCode() {
             const emailInput = document.getElementById('username').value;
             if(!emailInput) {
@@ -536,96 +543,8 @@
                 return;
             }
 
-            // هنا يتم إرسال طلب السيرفر الفعلي
+            // إرسال الكود الحقيقي للـ Backend
             fetch('/api/auth/send-code', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: emailInput })
-            });
-
-            alert("تم إرسال كود التحقق بنجاح!");
-
-            // حركة التلاشي والظهور للخانة التالية
-            const emailGroup = document.getElementById('email-group');
-            emailGroup.style.opacity = "0";
-            emailGroup.style.transform = "translateY(10px)";
-            
-            setTimeout(function() {
-                emailGroup.style.display = "none";
-                const otpGroup = document.getElementById('otp-group');
-                otpGroup.style.display = "block";
-                setTimeout(function() {
-                    otpGroup.style.opacity = "1";
-                    otpGroup.style.transform = "translateY(0)";
-                }, 50);
-            }, 400);
-        }
-
-        // التحقق من الكود وإظهار علامة التوثيق وتلاشي خانة الـ OTP
-        function verifyEmailCode() {
-            const emailInput = document.getElementById('username').value;
-            const otpCode = document.getElementById('otp-code').value;
-
-            if(!otpCode) {
-                alert("الرجاء إدخال كود التحقق!");
-                return;
-            }
-
-            // محاكاة التحقق الناجح مع التلاشي الأنيق
-            const otpGroup = document.getElementById('otp-group');
-            otpGroup.style.opacity = "0";
-            otpGroup.style.transform = "translateY(10px)";
-
-            setTimeout(function() {
-                otpGroup.style.display = "none";
-                
-                // إظهار التوثيق المتوهج وعلامة الصح
-                const verifiedBadge = document.getElementById('verified-badge');
-                verifiedBadge.style.display = "block";
-
-                // إظهار خانة الباسوورد تلقائياً بعدها بنعومة
-                const passwordGroup = document.getElementById('password-group');
-                passwordGroup.style.display = "block";
-                setTimeout(function() {
-                    passwordGroup.style.opacity = "1";
-                    passwordGroup.style.transform = "translateY(0)";
-                }, 50);
-            }, 400);
-        }
-
-        function handleLogin(event) {
-            event.preventDefault(); 
-            
-            const passwordInput = document.getElementById('password').value;
-            const msgDiv = document.getElementById('msg');
-            
-            const correctPassword = "kuroma2026";
-
-            if (passwordInput === correctPassword) {
-                msgDiv.className = "message success-msg";
-                msgDiv.style.display = "block";
-                msgDiv.innerText = "تم التحقق من الهوية بنجاح! جاري تحميل الدليل...";
-
-                setTimeout(function() {
-                    var loginScreen = document.getElementById("loginScreen");
-                    loginScreen.style.opacity = "0";
-                    
-                    setTimeout(function() {
-                        loginScreen.style.display = "none";
-                        var mainContent = document.getElementById("mainContent");
-                        mainContent.style.display = "flex";
-                        window.scrollTo(0, 0);
-                    }, 600);
-                }, 1000);
-
-            } else {
-                msgDiv.className = "message error-msg";
-                msgDiv.style.display = "block";
-                msgDiv.innerText = "فشل التحقق: كلمة المرور غير صحيحة.";
-            }
-        }
-    </script>
-</body>
-</html>
-EOF
+                headers: { 'Content-Type': 'application/json
 
