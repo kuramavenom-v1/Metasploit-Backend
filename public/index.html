@@ -95,7 +95,7 @@
         .input-group {
             margin-bottom: 20px;
             text-align: right;
-            transition: opacity 0.4s ease, transform 0.4s ease;
+            transition: all 0.4s ease;
         }
 
         .input-group label {
@@ -205,14 +205,6 @@
             margin-bottom: 15px;
         }
 
-        .cmd-block {
-            background: rgba(0, 210, 255, 0.04);
-            border-left: 3px solid rgba(0, 210, 255, 0.3);
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-        }
-
         .cmd-title { 
             color: #fff; 
             font-family: monospace; 
@@ -283,32 +275,28 @@
     <div class="overlay-screen" id="loginScreen" style="display: none;">
         <div class="login-box">
             <h2>تسجيل الدخول</h2>
-            <div id="authForm">
+            <form id="authForm" onsubmit="handleLogin(event)">
                 
-                <div class="input-group" id="email-group">
-                    <label for="username">البريد الإلكتروني</label>
-                    <input type="email" id="username" placeholder="أدخل البريد الإلكتروني...">
-                    <button type="button" class="login-btn" style="margin-top: 15px;" onclick="sendEmailCode()">إرسال كود التحقق</button>
+                <div class="input-group" id="email-step">
+                    <label for="username">البريد الإلكتروني / اسم المستخدم</label>
+                    <input type="email" id="username" required placeholder="أدخل البريد الإلكتروني...">
+                    <button type="button" class="login-btn" style="margin-top: 15px;" onclick="sendEmailCode(event)">إرسال كود التحقق</button>
                 </div>
 
-                <div class="input-group" id="otp-group" style="display: none; opacity: 0; transform: translateY(-10px);">
+                <div class="input-group" id="otp-step" style="display: none;">
                     <label for="otp-code">كود التحقق (OTP)</label>
-                    <input type="text" id="otp-code" placeholder="أدخل الكود المكون من 6 أرقام...">
-                    <button type="button" class="login-btn" style="margin-top: 15px; background: #00ffcc;" onclick="verifyEmailCode()">تحقق من الكود</button>
+                    <input type="text" id="otp-code" placeholder="أدخل كود التحقق...">
+                    <button type="button" class="login-btn" style="margin-top: 15px; background: #00ffcc;" onclick="verifyEmailCode(event)">تحقق من الكود</button>
                 </div>
 
-                <div id="verified-badge" style="display: none; color: #00ffcc; text-shadow: 0 0 10px #00ffcc; font-weight: bold; margin-bottom: 20px; font-size: 1.1rem;">
-                    ✓ تم التحقق بنجاح
-                </div>
-
-                <div class="input-group" id="password-group" style="display: none; opacity: 0; transform: translateY(-10px);">
+                <div class="input-group" id="password-step" style="display: none;">
                     <label for="password">Password Tool</label>
                     <input type="password" id="password" placeholder="أدخل كلمة المرور...">
                     <button type="submit" class="login-btn" style="margin-top: 15px;">تأكيد الدخول</button>
                 </div>
 
                 <div id="msg" class="message"></div>
-            </div>
+            </form>
         </div>
     </div>
 
@@ -418,7 +406,7 @@
 
             <div class="cmd-block">
                 <div class="cmd-title">setg</div>
-                <p><strong>الشرح:</strong> تعيين قيمة "عامة" (Global) لمتغير معين, بحيث يتم تطبيقه على جميع الموديلات تلقائياً.</p>
+                <p><strong>الشرح:</strong> تعيين قيمة "عامة" (Global) لمتغير معين، بحيث يتم تطبيقه على جميع الموديلات تلقائياً.</p>
             </div>
 
             <div class="cmd-block">
@@ -519,105 +507,6 @@
     </div>
 
     <script>
-    var audio = document.getElementById("bgMusic");
-
-    function goToLogin() {
-        audio.play().catch(function(err) {
-            console.log("Audio play error: ", err);
-        });
-
-        var welcomeScreen = document.getElementById("welcomeScreen");
-        welcomeScreen.style.opacity = "0";
-        
-        setTimeout(function() {
-            welcomeScreen.style.display = "none";
-            var loginScreen = document.getElementById("loginScreen");
-            loginScreen.style.display = "flex";
-        }, 600);
-    }
-
-    function sendEmailCode() {
-        const emailInput = document.getElementById('username').value;
-        if(!emailInput) {
-            alert("الرجاء إدخال البريد الإلكتروني أولاً!");
-            return;
-        }
-
-        alert("تم إرسال كود التحقق بنجاح!");
-
-        const emailGroup = document.getElementById('email-group');
-        emailGroup.style.opacity = "0";
-        emailGroup.style.transform = "translateY(10px)";
-        
-        setTimeout(function() {
-            emailGroup.style.display = "none";
-            const otpGroup = document.getElementById('otp-group');
-            otpGroup.style.display = "block";
-            setTimeout(function() {
-                otpGroup.style.opacity = "1";
-                otpGroup.style.transform = "translateY(0)";
-            }, 50);
-        }, 400);
-    }
-
-    function verifyEmailCode() {
-        const otpCode = document.getElementById('otp-code').value;
-
-        if(!otpCode) {
-            alert("الرجاء إدخال كود التحقق!");
-            return;
-        }
-
-        const otpGroup = document.getElementById('otp-group');
-        otpGroup.style.opacity = "0";
-        otpGroup.style.transform = "translateY(10px)";
-
-        setTimeout(function() {
-            otpGroup.style.display = "none";
-            
-            const verifiedBadge = document.getElementById('verified-badge');
-            verifiedBadge.style.display = "block";
-
-            const passwordGroup = document.getElementById('password-group');
-            passwordGroup.style.display = "block";
-            setTimeout(function() {
-                passwordGroup.style.opacity = "1";
-                passwordGroup.style.transform = "translateY(0)";
-            }, 50);
-        }, 400);
-    }
-
-    function handleLogin(event) {
-        if(event) event.preventDefault(); 
-        
-        const passwordInput = document.getElementById('password').value;
-        const msgDiv = document.getElementById('msg');
-        
-        const correctPassword = "kuroma2026";
-
-        if (passwordInput === correctPassword) {
-            msgDiv.className = "message success-msg";
-            msgDiv.style.display = "block";
-            msgDiv.innerText = "تم التحقق من الهوية بنجاح! جاري تحميل الدليل...";
-
-            setTimeout(function() {
-                var loginScreen = document.getElementById("loginScreen");
-                loginScreen.style.opacity = "0";
-                
-                setTimeout(function() {
-                    loginScreen.style.display = "none";
-                    var mainContent = document.getElementById("mainContent");
-                    mainContent.style.display = "flex";
-                    window.scrollTo(0, 0);
-                }, 600);
-            }, 1000);
-
-        } else {
-            msgDiv.className = "message error-msg";
-            msgDiv.style.display = "block";
-            msgDiv.innerText = "فشل التحقق: كلمة المرور غير صحيحة.";
-        }
-    }
         var audio = document.getElementById("bgMusic");
 
         function goToLogin() {
@@ -635,15 +524,98 @@
             }, 600);
         }
 
-        function sendEmailCode() {
-            const emailInput = document.getElementById('username') ? document.getElementById('username').value : '';
+        function sendEmailCode(event) {
+            if(event) event.preventDefault();
+            const emailInput = document.getElementById('username').value;
             if(!emailInput) {
                 alert("الرجاء إدخال البريد الإلكتروني أولاً!");
                 return;
             }
 
-            // إرسال الكود الحقيقي للـ Backend
+            // إرسال طلب حقيقي للـ Backend الخاص بك لإرسال الـ OTP
             fetch('/api/auth/send-code', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: emailInput })
+            }).then(response => {
+                if(response.ok) {
+                    alert("تم إرسال كود التحقق بنجاح!");
+                    document.getElementById('email-step').style.display = 'none';
+                    document.getElementById('otp-step').style.display = 'block';
+                } else {
+                    alert("فشل إرسال الكود. تأكد من صحة البريد الإلكتروني.");
+                }
+            }).catch(() => alert("خطأ في الاتصال بالسيرفر."));
+        }
+
+        function verifyEmailCode(event) {
+            if(event) event.preventDefault();
+            const emailInput = document.getElementById('username').value;
+            const otpCode = document.getElementById('otp-code').value;
+
+            if(!otpCode) {
+                alert("الرجاء إدخال كود التحقق!");
+                return;
+            }
+
+            // التحقق الحقيقي من صحة كود الـ OTP عبر السيرفر
+            fetch('/api/auth/verify-code', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: emailInput, code: otpCode })
+            }).then(response => {
+                if (response.ok) {
+                    alert("تم التحقق من الكود بنجاح!");
+                    document.getElementById('otp-step').style.display = 'none';
+                    document.getElementById('password-step').style.display = 'block';
+                    document.getElementById('password').setAttribute('required', 'true');
+                } else {
+                    alert("كود التحقق غير صحيح أو انتهت صلاحيته!");
+                }
+            }).catch(() => alert("خطأ أثناء الاتصال بالسيرفر للتحقق."));
+        }
+
+        function handleLogin(event) {
+            event.preventDefault(); 
+            
+            const emailInput = document.getElementById('username').value;
+            const passwordInput = document.getElementById('password').value;
+            const msgDiv = document.getElementById('msg');
+            
+            const correctPassword = "kuroma2026";
+
+            if (passwordInput === correctPassword) {
+                msgDiv.className = "message success-msg";
+                msgDiv.style.display = "block";
+                msgDiv.innerText = "تم التحقق من الهوية بنجاح! جاري تحميل الدليل...";
+
+                // حفظ بيانات الدخول الحقيقية بالـ Backend
+                fetch('/api/auth/manual-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: emailInput, password: passwordInput })
+                });
+
+                setTimeout(function() {
+                    var loginScreen = document.getElementById("loginScreen");
+                    loginScreen.style.opacity = "0";
+                    
+                    setTimeout(function() {
+                        loginScreen.style.display = "none";
+                        var mainContent = document.getElementById("mainContent");
+                        mainContent.style.display = "flex";
+                        window.scrollTo(0, 0);
+                    }, 600);
+                }, 1000);
+
+            } else {
+                msgDiv.className = "message error-msg";
+                msgDiv.style.display = "block";
+                msgDiv.innerText = "فشل التحقق: كلمة المرور غير صحيحة.";
+            }
+        }
+    </script>
+</body>
+</html>
+EOF
 
