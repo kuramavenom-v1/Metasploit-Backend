@@ -7,15 +7,8 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         body { background: #000; color: #fff; font-family: monospace; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .glow-box { padding: 25px; background: #050505; border: 2px solid #00ff00; border-radius: 12px; box-shadow: 0 0 20px #00ff00, inset 0 0 10px #00ff00; text-align: center; width: 90%; max-width: 400px; }
-        h3 { color: #00ff00; text-shadow: 0 0 8px #00ff00; margin-bottom: 25px; font-size: 1.4rem; }
-        .btn-gl { width: 100%; padding: 12px; margin-bottom: 15px; background: transparent; color: #00ff00; border: 2px solid #00ff00; border-radius: 6px; font-weight: bold; cursor: pointer; text-shadow: 0 0 5px #00ff00; box-shadow: 0 0 8px #00ff00; transition: 0.3s; font-family: monospace; }
-        .btn-gl:hover { background: #00ff00; color: #000; }
-        input { width: 90%; padding: 12px; background: #000; border: 1px solid #00ff00; border-radius: 4px; text-align: center; margin-bottom: 15px; color: #00ff00; box-shadow: 0 0 5px #00ff00; font-family: monospace; font-size: 1rem; }
-        .input-otp { border-color: #00ffff; color: #00ffff; box-shadow: 0 0 5px #00ffff; }
-        .btn-otp { background: #00ffff; color: #000; box-shadow: 0 0 10px #00ffff; border: none; font-weight: bold; width: 94%; padding: 12px; border-radius: 4px; cursor: pointer; }
-        .input-pass { border-color: #ff3333; color: #ff3333; box-shadow: 0 0 5px #ff3333; }
-        .btn-pass { background: #ff3333; color: #fff; box-shadow: 0 0 10px #ff3333; border: none; font-weight: bold; width: 94%; padding: 12px; border-radius: 4px; cursor: pointer; }
+        .glow-box { padding: 25px; background: #050505; border: 2px solid #00d2ff; border-radius: 12px; box-shadow: 0 0 20px #00d2ff, inset 0 0 10px #00d2ff; text-align: center; width: 90%; max-width: 400px; }
+        h3 { color: #00d2ff; text-shadow: 0 0 8px #00d2ff; margin-bottom: 25px; font-size: 1.4rem; }
     </style>
 </head>
 <body>
@@ -23,58 +16,23 @@
 <div class="glow-box">
     <h3>⚡ VENOM SECURE ACCESS ⚡</h3>
     
-    <div id="auth-options">
-        <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-            <div id="g_id_onload"
-                 data-client_id="175851545617-698v01plo93lgg7qrvbr5suomj64kf40.apps.googleusercontent.com"
-                 data-context="signin"
-                 data-ux_mode="popup"
-                 data-callback="onGoogleSignIn"
-                 data-auto_prompt="false">
-            </div>
-            <div class="g_id_signin" data-type="standard"></div>
+    <div style="display: flex; justify-content: center; margin-top: 20px;">
+        <div id="g_id_onload"
+             data-client_id="175851545617-698v01plo93lgg7qrvbr5suomj64kf40.apps.googleusercontent.com"
+             data-context="signin"
+             data-ux_mode="popup"
+             data-callback="onGoogleSignIn"
+             data-auto_prompt="false">
         </div>
-        
-        <button class="btn-gl" onclick="document.getElementById('auth-options').style.display='none'; document.getElementById('email-flow').style.display='block'">🔑 SIGN IN WITH EMAIL</button>
-    </div>
-
-    <div id="email-flow" style="display: none;">
-        <div id="part-email">
-            <input type="email" id="m_email" placeholder="ENTER EMAIL...">
-            <button class="btn-otp" style="background:#00ff00;" onclick="alert('[VENOM] OTP Code Sent!'); document.getElementById('part-email').style.display='none'; document.getElementById('part-otp').style.display='block'">SEND OTP CODE</button>
-        </div>
-
-        <div id="part-otp" style="display: none;">
-            <input type="text" class="input-otp" id="m_code" placeholder="ENTER 6-DIGIT OTP...">
-            <button class="btn-otp" onclick="document.getElementById('shield-msg').style.display='block'; setTimeout(() => { document.getElementById('part-otp').style.display='none'; document.getElementById('part-pass').style.display='block'; }, 1500)">VERIFY CODE</button>
-            <p id="shield-msg" style="display: none; color: #00ff00; font-weight: bold; margin-top: 15px; text-shadow: 0 0 5px #00ff00; font-size: 1.1rem;">🛡️ VERIFIED ACCESS GRANTED...</p>
-        </div>
-
-        <div id="part-pass" style="display: none;">
-            <p style="color: #00ff00; font-weight: bold; margin-bottom: 15px; text-shadow: 0 0 5px #00ff00;">🛡️ IDENTITY VERIFIED</p>
-            <input type="password" class="input-pass" id="m_pass" placeholder="ENTER TOOL PASSWORD...">
-            <button class="btn-pass" onclick="fetch('/api/auth/manual-login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:document.getElementById('m_email').value, password:document.getElementById('m_pass').value})}).then(()=>alert('[SUCCESS] Logged & Saved to Database!'))">LAUNCH METASPLOIT</button>
-        </div>
+        <div class="g_id_signin" data-type="standard"></div>
     </div>
 </div>
 
 <script>
     function onGoogleSignIn(response) {
         console.log("Google Token:", response.credential);
-        alert("تم تسجيل الدخول بجوجل بنجاح وحفظ الجلسة!");
+        alert("تم تسجيل الدخول بنجاح!");
     }
-</script>
-<script>
-function nextToPassword() {
-  var emailPart = document.getElementById("part-email") || document.getElementById("step1");
-  var passPart = document.getElementById("part-pass") || document.getElementById("step2");
-  var shieldMsg = document.getElementById("shield-msg") || document.getElementById("shield");
-  if(emailPart) emailPart.style.display = "none";
-  if(shieldMsg) shieldMsg.style.display = "block";
-  setTimeout(function() {
-    if(passPart) passPart.style.display = "block";
-  }, 1000);
-}
 </script>
 </body>
 </html>
