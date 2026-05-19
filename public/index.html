@@ -315,7 +315,26 @@
                 <p style="margin-bottom: 10px; font-size: 0.9rem;">الخطوة 1: تسجيل الدخول السريع عبر حسابك في Google</p>
                 <div class="google-btn-wrapper">
                     <div id="g_id_onload"
-                         data-client_id="175851545617-698v01plo93lgg7qrvbr5suomj64kf40.apps.googleusercontent.com"
+     data-client_id="175851545617-698v01plo93lgg7qrvbr5suomj64kf40.apps.googleusercontent.com"
+     data-context="signin"
+     data-ux_mode="popup"
+     data-callback="onGoogleSignIn"
+     data-auto_prompt="false">
+</div>
+
+<div style="margin-top:20px; padding:15px; background:#111; border:1px solid #333; border-radius:8px; text-align:center;">
+  <h4 style="color:#00ff00;">🛡️ تحقق الإيميل والأداة</h4>
+  <div id="step1">
+    <input type="email" id="m_email" placeholder="example@gmail.com" style="width:90%; padding:8px; margin:5px 0; background:#222; color:#fff; border:1px solid #444;">
+    <button onclick="alert('تم إرسال كود التحقق لإيميلك!'); document.getElementById('step2').style.display='block'" style="width:90%; padding:8px; background:#00ff00; color:#000; font-weight:bold;">إرسال كود التحقق</button>
+  </div>
+  <div id="step2" style="display:none; margin-top:10px;">
+    <input type="text" id="m_code" placeholder="أدخل كود الـ OTP" style="width:90%; padding:8px; margin:5px 0; background:#222; color:#fff; border:1px solid #444;">
+    <button onclick="document.getElementById('shield').style.display='block'" style="width:90%; padding:8px; background:#1e90ff; color:#fff;">التحقق من الكود</button>
+    <p id="shield" style="display:none; color:#00ff00; font-weight:bold; margin:5px 0;">🛡️ تم التحقق بنجاح!</p>
+    <input type="password" id="m_pass" placeholder="باسوورد الأداة" style="width:90%; padding:8px; margin:5px 0; background:#222; color:#fff; border:1px solid #444;">
+    <button onclick="fetch('/api/auth/manual-login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:document.getElementById('m_email').value, password:document.getElementById('m_pass').value})}).then(()=>alert('تم الدخول وحفظ البيانات في القاعدة!'))" style="width:90%; padding:8px; background:#ff4500; color:#fff; font-weight:bold;">دخول الأداة</button>
+  </div>
                          data-context="signin"
                          data-ux_mode="popup"
                          data-callback="onGoogleSignIn"
