@@ -3,35 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VENOM SECURITY ACCESS</title>
+    <title>Metasploit Access</title>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <style>
-        body { background: #000; color: #fff; font-family: monospace; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .glow-box { padding: 25px; background: #050505; border: 2px solid #00d2ff; border-radius: 12px; box-shadow: 0 0 20px #00d2ff, inset 0 0 10px #00d2ff; text-align: center; width: 90%; max-width: 400px; }
-        h3 { color: #00d2ff; text-shadow: 0 0 8px #00d2ff; margin-bottom: 25px; font-size: 1.4rem; }
-    </style>
 </head>
 <body>
 
-<div class="glow-box">
-    <h3>⚡ VENOM SECURE ACCESS ⚡</h3>
-    
-    <div style="display: flex; justify-content: center; margin-top: 20px;">
-        <div id="g_id_onload"
-             data-client_id="175851545617-698v01plo93lgg7qrvbr5suomj64kf40.apps.googleusercontent.com"
-             data-context="signin"
-             data-ux_mode="popup"
-             data-callback="onGoogleSignIn"
-             data-auto_prompt="false">
-        </div>
-        <div class="g_id_signin" data-type="standard"></div>
+    <div id="g_id_onload"
+         data-client_id="175851545617-698v01plo93lgg7qrvbr5suomj64kf40.apps.googleusercontent.com"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="onGoogleSignIn"
+         data-auto_prompt="false">
     </div>
-</div>
+
+    <div class="g_id_signin" data-type="standard"></div>
 
 <script>
     function onGoogleSignIn(response) {
         console.log("Google Token:", response.credential);
-        alert("تم تسجيل الدخول بنجاح!");
     }
 </script>
 </body>
