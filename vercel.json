@@ -1,19 +1,22 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
-    }
-  ],
+  "cleanUrls": true,
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "server.js"
+      "src": "/api/auth/send-code",
+      "dest": "/api/auth/index.js"
+    },
+    {
+      "src": "/api/auth/verify-code",
+      "dest": "/api/auth/index.js"
+    },
+    {
+      "src": "/api/auth/manual-login",
+      "dest": "/api/auth/index.js"
     },
     {
       "src": "/(.*)",
-      "dest": "server.js"
+      "dest": "/public/$1"
     }
   ]
 }
